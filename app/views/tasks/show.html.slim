@@ -4,11 +4,20 @@
     # class="card-deck mb-3 text-left"
       # class="card mb-4"
         # class="card-header"
-          = @task.name
+          .row
+            .col-md-auto
+              = @task.name
+            .col-md
+              .progress
+                # class= "progress-bar progress-bar-info" role="progressbar" aria-valuenow="#{number_to_percentage(@task.progress, precision: 1)}" aria-valuemin="0" aria-valuemax="100"   style="width: #{@task.progress}%"
+                  | Progress #{@task.progress}
+              
+
+          
         # class="card-body"
           = @task.description
           -if @task.completed?
-            span class="badge badge-success" = "Task Not Completed"
+            span class="badge badge-success" = "Task Completed"
           -else
             span class="badge badge-danger" = "Task Not Completed "
 
@@ -18,12 +27,22 @@
             | |
             = link_to 'Back To Tasks', tasks_path, class:"btn btn-primary btn-sm"
             ||
-            = link_to 'Done!', task_done_task_path, class:"btn btn-success"
+            - @task.responsibles.each do |resp|
+              - if resp.user_id == current_user.id                
+                = link_to 'You already Done!', task_done_task_path, class:"btn btn-outline-success" if resp.done?
+                = link_to 'Marks as Done!', task_done_task_path, class:"btn btn-primary" unless resp.done?
+
             hr
             h6 Responsibles:
             - @task.responsibles.each do |res|
               hr              
               span class="badge badge-warning" = User.find(res.user_id).full_name
+              -if res.done?
+                span class="badge badge-success" = "Marked Done"
+              -else
+                span class="badge badge-info" = "?"
+
+
               
 
 

@@ -1,15 +1,15 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy]
-  before_action :isadmin?, only: [:create, :new, :edit]
-
+  before_action :isadmin?, only: [:create, :new, :edit, :destroy]
+  before_action :res_user, only:[:edit, :destroy,:update]
   # GET /tasks
   # GET /tasks.json
   def index
     if current_user.admin?
     @tasks = Task.order('created_at DESC')
     else
-      @tasks = Task.joins(:responsibles).where('responsibles.user_id' => current_user.id).order('created_at DESC')
+      @tasks = Task.joins(:responsibles).where('responsibles.user_id' => current_user.id, completed: false).order('created_at DESC')
     end
   end
 
@@ -77,15 +77,52 @@ class TasksController < ApplicationController
   end
 
 def task_done
-  if @task.responsibles.includes(current_user.id)
-    @task.update_attribute(:task_done, true)
-  else
-    redirect_to tasks_url, notice: 'Permission denied'
-  end
-  
+  @progress = 100 / @task.responsibles.size.to_f
+     
+    if @task.responsibles.exists?(user_id: current_user.id)
+      @task.responsibles.each do |res|
+        if res.done? && res.user_id == current_user.id
+          res.done = false 
+          res.save! 
+          @task.decrement!(:progress, @progress) 
+          redirect_to task_url, notice: 'Your task Done mark  invoked succesfully.'         
+        elsif res.done == false && res.user_id == current_user.id
+          res.done = true
+          res.save!       
+          @task.increment!(:progress, @progress)
+          redirect_to task_url, notice: 'You marked task as done. Waiting approve from management after %100 progress'           
+        end
+
+
+                  
+      end
+      
+
+
 
   
+    else
+      redirect_to tasks_url, alert: 'You have nno responsibility for this task'
+    end
+   
+  
+    
+    
+    if @task.responsibles == true
+      @task.update_attribute(:task_done, true)
+      @task.save
+    else
+        @task.update_attribute(:task_done, false)
+        @task.save
+    end
+
+             
+
 end
+
+
+
+
 
 
   private
@@ -103,5 +140,23 @@ end
 def isadmin?
   redirect_to root_path, alert: "You have no permission for that event" unless current_user.admin?
 end
+
+def res_user
+ redirect_to root_path unless @task.responsibles.exists?(user_id: current_user.id) or current_user.admin?
+  
+end
+
+
+
+def decrement!(attribute, by = 1)
+  decrement(attribute, by).update_attribute(attribute, self[attribute])
+end
+
+def increment!(attribute, by = 1)
+  increment(attribute, by).update_attribute(attribute, self[attribute])
+end
+
+
+
 
 end

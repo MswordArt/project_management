@@ -3,7 +3,11 @@
     # class="card-deck mb-3 text-left"
       # class="card mb-4"
         # class="card-header"
-          = link_to task.name, task
+          .row
+            .col-md-auto
+              = link_to task.name, task
+            .col-md-auto
+              span class="badge badge-info" = "  Progress:   #{number_to_percentage(task.progress, precision: 1)}"
         # class="card-body"
           = task.description
           hr
