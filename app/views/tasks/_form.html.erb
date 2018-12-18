@@ -1,37 +1,51 @@
-<%= form_with(model: task, local: true) do |form| %>
-  <% if task.errors.any? %>
+<%= simple_form_for @task do |f| %>
+  <% if @task.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
 
       <ul>
-      <% task.errors.full_messages.each do |message| %>
+      <% @task.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="field">    
+    <%= f.input :name, label: 'Task' %>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
+  <div class="field">    
+    <%= f.input :description, as: :text %>
   </div>
 
-  <div class="field">
-    <%= form.label :completed %>
-    <%= form.check_box :completed %>
+  <div class="field">    
+    <%= f.input :completed %>
   </div>
 
-  <div class="field">
-    <%= form.label :target_date %>
-    <%= form.date_select :target_date %>
+  <div class="field">   
+    <%= f.input :target_date, as: :date, start_year: Date.today.year + 20,
+                              end_year: Date.today.year - 0, discard_day: false,
+                              order: [:day, :month, :year] %>
   </div>
+
+  <div>
+  <p><strong>Responsibles of task:</strong></p>
+
+
+  <div id="responsibles">
+      <%= f.fields_for :responsibles do |responsible| %>
+        <%= render 'responsible_fields', f: responsible %>
+      <% end %>
+
+  <div class="links">
+  <%= link_to_add_association 'Add Staff to Responsible', f, :responsibles, type: "button", class:"btn btn-primary btn-sm" %>
+</div>
+</div>
+<hr>
+
 
   <div class="actions">
-    <%= form.submit %>
+    <%= f.submit class: "btn btn-success" %>
   </div>
 <% end %>

@@ -1,16 +1,25 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy]
+  before_action :isadmin?, only: [:create, :new, :edit]
 
   # GET /tasks
   # GET /tasks.json
   def index
-    @tasks = Task.all
+    if current_user.admin?
+    @tasks = Task.order('created_at DESC')
+    else
+      @tasks = Task.joins(:responsibles).where('responsibles.user_id' => current_user.id).order('created_at DESC')
+    end
   end
 
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+    @responsibles = @task.responsibles
+    @responsible = Responsible.find_by_task_id(:task_id)
+    #@responsible.full_name = User.find_by_id(@responsible.user_id).full_name
+    
   end
 
   # GET /tasks/new
@@ -25,7 +34,7 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.new(task_params)
 
     respond_to do |format|
       if @task.save
@@ -62,6 +71,23 @@ class TasksController < ApplicationController
     end
   end
 
+
+  def mytasks    
+    @mytasks = Task.joins(:responsibles).where('responsibles.user_id' => current_user.id)     
+  end
+
+def task_done
+  if @task.responsibles.includes(current_user.id)
+    @task.update_attribute(:task_done, true)
+  else
+    redirect_to tasks_url, notice: 'Permission denied'
+  end
+  
+
+  
+end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
@@ -70,6 +96,12 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :description, :completed, :target_date, responsibles_attributes:[:user_id])
+      params.require(:task).permit(:name, :description, :completed, :target_date, responsibles_attributes:[:id,:user_id, :_destroy])
     end
+
+
+def isadmin?
+  redirect_to root_path, alert: "You have no permission for that event" unless current_user.admin?
+end
+
 end

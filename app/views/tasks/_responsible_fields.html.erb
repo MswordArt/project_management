@@ -1,0 +1,8 @@
+<div class="nested-fields">
+      <%= f.label "Select Staff for task" %>
+          
+      <%= f.collection_select(:user_id, User.all, :id, :full_name, {:prompt => 'Select the user'} ) %> 
+      <%= f.check_box :_destroy %>
+     
+      <%= link_to_remove_association "remove responsible", f, class:"btn btn-danger btn-sm" %>
+    </div>

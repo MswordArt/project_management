@@ -1,4 +1,5 @@
 class Task < ApplicationRecord
-    has_many :responsibles
-    accepts_nested_attributes_for :responsibles
+    belongs_to :user
+    has_many :responsibles, dependent: :destroy
+    accepts_nested_attributes_for :responsibles, reject_if: :all_blank, allow_destroy: true
 end
