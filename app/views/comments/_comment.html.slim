@@ -1,0 +1,16 @@
+# class="card-body"
+    span class="badge badge-warning" = User.find(comment.user_id).full_name
+    br
+    = comment.body
+    small   Submitted: #{time_ago_in_words(comment.created_at)} ago
+    button onClick="openForm" class="btn btn-primary btn-sm" Reply
+    #comment class="comment-form"
+        = simple_form_for [comment, Comment.new] do |f|
+            = f.hidden_field :user_id, value: current_user.id
+            = f.input :body, as: :text, placeholder: "Add a reply", label: false
+            br
+            = f.submit "Reply", class:"btn btn-primary btn-sm"     
+            = render partial: 'comments/comment', collection: comment.comments
+   
+
+    

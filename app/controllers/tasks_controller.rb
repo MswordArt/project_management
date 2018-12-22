@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy]
-  before_action :isadmin?, only: [:create, :new, :edit, :destroy]
-  before_action :res_user, only:[:edit, :destroy,:update]
+  before_action :isadmin?, only: [:create, :new, :edit, :destroy, :completed]
+  before_action :res_user, only:[:edit, :destroy,:update, :show]
   # GET /tasks
   # GET /tasks.json
   def index
@@ -85,7 +85,7 @@ def task_done
           res.done = false 
           res.save! 
           @task.decrement!(:progress, @progress) 
-          redirect_to task_url, notice: 'Your task Done mark  invoked succesfully.'         
+          redirect_to task_url, notice: 'Your task done mark  invoked succesfully.'         
         elsif res.done == false && res.user_id == current_user.id
           res.done = true
           res.save!       
@@ -102,7 +102,7 @@ def task_done
 
   
     else
-      redirect_to tasks_url, alert: 'You have nno responsibility for this task'
+      redirect_to tasks_url, alert: 'You have no responsibility for this task'
     end
    
   
@@ -120,7 +120,15 @@ def task_done
 
 end
 
-
+def completed
+    if current_user.admin?
+    @tasks = Task.order('created_at DESC').where(completed: true)
+    else
+      redirect_to root_path, alert: "You have no permission for that event" unless current_user.admin?
+    end
+ 
+  
+end
 
 
 
@@ -142,7 +150,7 @@ def isadmin?
 end
 
 def res_user
- redirect_to root_path unless @task.responsibles.exists?(user_id: current_user.id) or current_user.admin?
+ redirect_to root_path, alert: "You are not responsible for this task" unless @task.responsibles.exists?(user_id: current_user.id) or current_user.admin?
   
 end
 
