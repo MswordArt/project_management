@@ -1,7 +1,11 @@
-p = "Hi! You have a new task from SPM(Sahitech Project Management Portal)"
+p = "Hi #{@res_username},"
+p  have a new task from SPM (Sahitech Project Management Portal)
+h3 = @task.name
 
-p = "Hi! You have a new task from SPM(Sahitech Project Management Portal)"
-h2 = @task.name
-
-p Please click the link below for check the task
+p Please click the link below to check the task
 = link_to @task.name, task_url(@task)
+
+
+
+
+

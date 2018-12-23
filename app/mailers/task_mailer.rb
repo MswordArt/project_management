@@ -1,32 +1,46 @@
 class TaskMailer < ApplicationMailer
 
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.task_mailer.new_task.subject
-  # foo = collection.inject([]) {|sum, item| sum << item }
-  def new_task(task)
-    @task = task
-    @responsible = Responsible.find_by_task_id(@task.id)
-
-    @task.responsibles.each do |res|
-      @user = User.where(id: res.user_id).full_name
-    
-
-    end
+   def new_task(task)
 
 
+  @task = task
+  @responsibles = @task.responsibles
 
-    #@user = User.where(email: 'f@example.com')
-    @emails = @task.responsibles.map {|res| User.find(res.user_id).email}
-    #@user = User.find(@responsible.user_id)
-    
-    mail(to: @emails, subject: "New Task for you!")
+  # with variables set, let's create the loop to do its magic 
+  @responsibles.each do |res|
+    @res_username = User.find(res.user_id).full_name
+    mail = mail(
+        :to => "#{User.find(res.user_id).email}",
+        #:from => "noreply@foo.org",
+        #:return_path => "noreply@foo.org",  
+        :subject => "New Task: #{@task.name}",
+        :body => "Hi #{User.find(res.user_id).full_name}" 
+        #:template_path => 'blaster',
+        #:template_name => 'blast'
+    )do |format|
+    format.html { render 'new_task.html.slim'}
+    format.text { render 'new_task.text.erb'}
+    end   
+    mail.deliver
+  end # contacts.each loop
+end
 
-    
-      
-      
-  end
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end
