@@ -1,9 +1,14 @@
 p = "Hi #{@res_username},"
-p  have a new task from SPM (Sahitech Project Management Portal)
+p  have a new task from SPM (Sahitech Project Management Portal) on "#{@project.name}" project.
 h3 = @task.name
+p Task description:   
+i class="fa fa-quote-left"
+    strong  = @task.description
+i class="fa fa-quote-right"
+
 
 p Please click the link below to check the task
-= link_to @task.name, task_url(@task)
+= link_to @task.name, project_task_url(@project, @task)
 
 
 

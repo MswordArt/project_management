@@ -1,0 +1,11 @@
+p = "Hi #{@comment.commentable.user.full_name},"
+p  New comment on task that includes you!
+p = "#{@comment.user.full_name} said:"
+h3 = @comment.body
+p Please click the link below to check the comment
+- if @commentable_type == "Task"
+    
+    = link_to @comment.commentable.name, task_url(@comment.commentable)
+- else
+    = link_to @comment.commentable.body, task_url(@comment.commentable) 
+ 

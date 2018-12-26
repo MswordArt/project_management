@@ -1,0 +1,14 @@
+p = "Hi #{@task.user.full_name},"
+-if @res.done?
+    p  = "#{@res_username} Marked as 'Done' at task :"
+-else 
+    p  = "#{@res_username} Invoked 'Done' at #{@task.name} task :"
+h3  = link_to @task.name, project_task_url(@project, @task)
+
+p Please click the link below to check the task
+= link_to @task.name, project_task_url(@project, @task)
+
+
+
+
+

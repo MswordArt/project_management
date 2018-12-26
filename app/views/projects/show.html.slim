@@ -1,0 +1,27 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @project.name
+p
+  strong Description:
+  = @project.description
+p
+  strong Start:
+  = @project.start
+
+#tasks
+  - unless @project.tasks.empty?
+    = render 'tasks/tasks'
+  - else
+    p There is no task that created for this project. 
+    =< link_to 'Create New Task', new_project_task_path(@project)
+
+
+
+
+=> link_to 'Edit', edit_project_path(@project)
+'|
+=< link_to 'Back', projects_path
+
+=< link_to 'Create New Task', new_project_task_path(@project)

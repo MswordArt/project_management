@@ -1,0 +1,13 @@
+p = " Hi #{@res_username}!"
+p This is the reminder mail from your task on  "#{@project.name}" project by SPP(Sahitech Project Portal)
+p Task: 
+h3 = @task.name
+= @task.description
+
+p For view, mark as done or comment if you want, please click the task link below
+= project_task_url(@project, @task)
+
+
+
+
+

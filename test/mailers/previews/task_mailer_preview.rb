@@ -7,4 +7,10 @@ class TaskMailerPreview < ActionMailer::Preview
     TaskMailer.new_task(task)
   end
 
+  def task_reminder
+    task = Task.last
+    TaskMailer.new_task(task)
+  end
+
+
 end

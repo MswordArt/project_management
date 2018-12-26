@@ -11,6 +11,8 @@ class CommentsController < ApplicationController
           if @comment.save
             
             redirect_back fallback_location: root_path, notice: 'Your comment was successfully posted!'
+            #CommentMailer.new_comment(comment).deliver
+            CommentMailer.new_comment(@comment).deliver
           else
             redirect_back fallback_location: root_path, notice: "Your comment wasn't posted!"
           end
