@@ -29,6 +29,8 @@
               - if resp.user_id == current_user.id                
                 = link_to 'You already Done!', task_done_project_task_path, class:"btn btn-outline-success" if resp.done?
                 = link_to 'Marks as Done!', task_done_project_task_path, class:"btn btn-primary" unless resp.done?
+            = link_to 'Mark as Complete!', task_complete_project_task_path, class:"btn btn-primary" if current_user.admin?
+
 
             hr
             h6 Responsibles:

@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project, only: [:new, :create, :show, :edit, :update, :task_done, :destroy, :mytasks]
-  before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy]
-  before_action :isadmin?, only: [:create, :new, :edit, :destroy, :completed]
+  before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy, :task_complete]
+  before_action :isadmin?, only: [:create, :new, :edit, :destroy, :completed, :task_complete]
   before_action :res_user, only:[:edit, :destroy,:update, :show]
   # GET /tasks
   # GET /tasks.json
@@ -129,6 +129,22 @@ class TasksController < ApplicationController
 
   
 
+    def task_complete
+      if @task.completed?
+        @task.completed = false
+        @task.save!
+        redirect_to project_task_url(@project, @task), notice: 'Task marked as "Completed" succesfully.'
+      else
+        @task.completed = true
+        @task.save!
+        redirect_to project_task_url(@project, @task), notice: 'Task "Completed" mark  invoked succesfully.'
+      end
+      
+    end
+
+
+
+
     def task_reminder
       @tasks = Task.where(task_done: false)
       TaskMailer.task_reminder(@tasks).deliver
@@ -137,10 +153,7 @@ class TasksController < ApplicationController
     end
 
 
-    def mytasks  
-      @project = Project.find(params[:project_id])  
-      @mytasks = @project.tasks.joins(:responsibles).where('responsibles.user_id' => current_user.id)     
-    end
+  
 
 
 

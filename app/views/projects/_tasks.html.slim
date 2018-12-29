@@ -13,6 +13,9 @@
         # class="card-body"
           = task.description
           hr
+          p Under of:
+          = link_to Project.find(task.project_id).name, project_path(@project)
+          hr
           -if task.completed?
             span class="badge badge-success" = "Task Completed"
           -else

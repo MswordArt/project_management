@@ -85,7 +85,13 @@ class ProjectsController < ApplicationController
   
     end
 
-
+    def mytasks
+      @projects = Project.includes(:tasks).where(tasks: { completed: true } ).all 
+      @projects.each do |project|
+        @project = project
+      @mytasks = @project.tasks.joins(:responsibles).where('responsibles.user_id' => current_user.id) 
+      end    
+    end
 
 
 

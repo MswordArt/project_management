@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   devise_for :users
-  get 'tasks/mytasks' => "tasks#mytasks"
+  get 'projects/mytasks' => "projects#mytasks"
   get 'projects/completed' => "projects#completed"
   #get 'tasks/reminder' => "tasks#reminder"
   resources :projects do
@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       
       get :task_done
       put :task_done
+      get :task_complete
+      put :task_complete
       
       resources :responsibles
     end

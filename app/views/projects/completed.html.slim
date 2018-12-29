@@ -1,34 +1,37 @@
-- @tasks.each do |task|
-  .container 
-    # class="card-deck mb-3 text-left"
-      # class="card mb-4"
-        # class="card-header"
-          .row
-            .col-md-auto
-              = link_to task.name, project_task_path(@project, task)
-            .col-md
-              .progress
-                # class= "progress-bar progress-bar-striped" role="progressbar" aria-valuenow="#{number_to_percentage(task.progress, precision: 1)}" aria-valuemin="0" aria-valuemax="100"   style="width: #{task.progress}%"
-                  | Progress #{task.progress}
-        # class="card-body"
-          = task.description
-          hr
-          p Under of:
-          = link_to Project.find(task.project_id).name, project_path(@project)
-          hr
-          -if task.completed?
-            span class="badge badge-success" = "Task Completed"
-          -else
-            span class="badge badge-warning" = "Task Not Completed "
+-if @tasks.present?
+  - @tasks.each do |task|
+    .container 
+      # class="card-deck mb-3 text-left"
+        # class="card mb-4"
+          # class="card-header"
+            .row
+              .col-md-auto
+                = link_to task.name, project_task_path(@project, task)
+              .col-md
+                .progress
+                  # class= "progress-bar progress-bar-striped" role="progressbar" aria-valuenow="#{number_to_percentage(task.progress, precision: 1)}" aria-valuemin="0" aria-valuemax="100"   style="width: #{task.progress}%"
+                    | Progress #{task.progress}
+          # class="card-body"
+            = task.description
+            hr
+            p Under of:
+            = link_to Project.find(task.project_id).name, project_path(@project)
+            hr
+            -if task.completed?
+              span class="badge badge-success" = "Task Completed"
+            -else
+              span class="badge badge-warning" = "Task Not Completed "
 
-          span class="badge badge-info" = "Target Date:   #{task.target_date.to_time.strftime('%B %e at %l:%M %p')}"
-        # class="card-footer"
-            h6 Responsibles:
-            - task.responsibles.each do |res|
-              span class="badge badge-info" = User.find(res.user_id).full_name
-              
-            = link_to 'delete', project_task_path(@project, task), confirm: 'Are you sure?', method: :delete, class:"btn btn-danger btn-sm", style: "float: right"
-            = link_to 'Edit', edit_project_task_path(@project, task), class:"btn btn-info btn-sm", style: "float: right"
-
+            span class="badge badge-info" = "Target Date:   #{task.target_date.to_time.strftime('%B %e at %l:%M %p')}"
+          # class="card-footer"
+              h6 Responsibles:
+              - task.responsibles.each do |res|
+                span class="badge badge-info" = User.find(res.user_id).full_name
+                
+              = link_to 'delete', project_task_path(@project, task), confirm: 'Are you sure?', method: :delete, class:"btn btn-danger btn-sm", style: "float: right"
+              = link_to 'Edit', edit_project_task_path(@project, task), class:"btn btn-info btn-sm", style: "float: right"
+-else
+  #notasks
+    p There is no tasks those completed.
 
 

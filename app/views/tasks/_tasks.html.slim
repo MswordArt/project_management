@@ -12,7 +12,7 @@
                   | Progress #{task.progress}
         # class="card-body"
           = task.description
-          hr
+          hr          
           -if task.completed?
             span class="badge badge-success" = "Task Completed"
           -else
