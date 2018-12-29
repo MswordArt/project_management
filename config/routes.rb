@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   
   devise_for :users
   get 'tasks/mytasks' => "tasks#mytasks"
-  get 'tasks/completed' => "tasks#completed"
-  get 'tasks/reminder' => "tasks#reminder"
+  get 'projects/completed' => "projects#completed"
+  #get 'tasks/reminder' => "tasks#reminder"
   resources :projects do
   resources :tasks do 
     resources :comments

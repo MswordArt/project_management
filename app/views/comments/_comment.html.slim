@@ -5,7 +5,7 @@
     small   Submitted: #{time_ago_in_words(comment.created_at)} ago
     button onClick="openForm" class="btn btn-primary btn-sm" Reply
     #comment class="comment-form"
-        = simple_form_for [comment, Comment.new] do |f|
+        = simple_form_for [@project, @task, Comment.new] do |f|
             = f.hidden_field :user_id, value: current_user.id
             = f.input :body, as: :text, placeholder: "Add a reply", label: false
             br

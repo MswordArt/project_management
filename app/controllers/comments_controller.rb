@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
             
             redirect_back fallback_location: root_path, notice: 'Your comment was successfully posted!'
             #CommentMailer.new_comment(comment).deliver
-            CommentMailer.new_comment(@comment).deliver
+            CommentMailer.new_comment(@comment).deliver_now
           else
             redirect_back fallback_location: root_path, notice: "Your comment wasn't posted!"
           end
@@ -25,6 +25,12 @@ class CommentsController < ApplicationController
         end
     
         def find_commentable
+          # @project = Task.find_by_id(params[:project_id])
+          # @project.tasks.each do |task|
+          #   @commentable = task
+          #   task.comments.each do |comment|
+          #     @commentable = commen
+            #end
           @commentable = Comment.find_by_id(params[:comment_id]) if params[:comment_id]
           @commentable = Task.find_by_id(params[:task_id]) if params[:task_id]
           @user_id = current_user.id

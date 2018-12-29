@@ -9,7 +9,10 @@ p
 p
   strong Start:
   = @project.start
-
+-if current_user.admin? 
+  .row
+    =< link_to 'Create New Task', new_project_task_path(@project), class:"btn btn-primary"
+hr 
 #tasks
   - unless @project.tasks.empty?
     = render 'tasks/tasks'
@@ -24,4 +27,4 @@ p
 '|
 =< link_to 'Back', projects_path
 
-=< link_to 'Create New Task', new_project_task_path(@project)
+

@@ -66,7 +66,7 @@ def task_reminder(task)
   @project = Project.find(task.project_id)
   @task = task
   task.responsibles.each do |res|
-    unless res.done?
+    if res.done == false
     @res_username = User.find(res.user_id).full_name
     mail = mail(
         :to => "#{User.find(res.user_id).email}",
@@ -89,7 +89,39 @@ end
 
 
 
+def target_reminder(task)
+  @tasks = task
+  
+  #@responsibles = @task.responsibles
 
+
+@tasks.each do |task|
+  @project = Project.find(task.project_id)
+  @task = task
+  if (task.target_date.to_date - Time.now.to_date).to_i < 2
+  task.responsibles.each do |res|
+    if res.done == false and res.notified == false
+    @res_username = User.find(res.user_id).full_name
+    mail = mail(
+        :to => "#{User.find(res.user_id).email}",
+        #:from => "noreply@foo.org",
+        #:return_path => "noreply@foo.org",  
+        :subject => "Target Warning: #{@task.name}",
+        :body => "Hi #{User.find(res.user_id).full_name}" 
+        #:template_path => 'blaster',
+        #:template_name => 'blast'
+    )do |format|
+    format.html { render 'target_reminder.html.slim'}
+    #format.text { render 'task_reminder.text.erb'}
+    end   
+    mail.deliver
+    res.notified = true
+    res.save!
+  end 
+end
+end # if target date
+end
+end
 
 
 

@@ -5,7 +5,7 @@ h3 = @comment.body
 p Please click the link below to check the comment
 - if @commentable_type == "Task"
     
-    = link_to @comment.commentable.name, task_url(@comment.commentable)
+    = link_to @comment.commentable.name, project_task_url(@project, @comment.commentable)
 - else
-    = link_to @comment.commentable.body, task_url(@comment.commentable) 
+    = link_to @comment.commentable.body, project_task_url(@project, @comment.commentable) 
  

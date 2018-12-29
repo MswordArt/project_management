@@ -25,6 +25,11 @@ set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log
 set :output, "log/cron_log.log"
   
 
-  every 1.minutes do
+  every 23.hours do
     rake "task:task_reminder"
+  end
+
+
+  every 2.hours do
+    rake "target:target_reminder"
   end

@@ -12,12 +12,12 @@
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <% if current_user.admin? %>  
                 
-    <a class="dropdown-item" href="/tasks/completed">Completed Tasks</a>  
+    <a class="dropdown-item" href="/projects/completed">Completed Tasks</a>  
            
     <a class="dropdown-item" href="/admin"> Admin Panel </a>
        <% end %>
     <a class="dropdown-item" href="/users/edit">Edit Account</a>
-    <a class="dropdown-item" href="/tasks/mytasks">My Tasks</a> 
+    <a class="dropdown-item" href="/projects/mytasks">My Tasks</a> 
     
     <a><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item"  %></a>
   </div>

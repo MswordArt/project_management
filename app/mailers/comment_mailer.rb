@@ -8,7 +8,8 @@ class CommentMailer < ApplicationMailer
   def new_comment(comment)
     @comment = comment
     @commentable_type = @comment.commentable_type
-    @task = Task.find(params[:task_id])
+    @task = Task.find(comment.commentable_id)
+    @project = Project.find(@task.project_id)
     
 
     mail to: @comment.commentable.user.email, subject: "You have a new Comment!" unless @comment.commentable.user == @comment.user

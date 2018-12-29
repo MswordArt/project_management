@@ -1,6 +1,8 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy]
   before_action :isadmin?, only: [:create, :new, :edit, :destroy]
+  #before_action :res_user, only:[:edit, :destroy,:update, :show]
+
   # GET /projects
   # GET /projects.json
   def index
@@ -10,13 +12,18 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
-    @tasks = @project.tasks
+    if current_user.admin?
+      @tasks = @project.tasks.order('created_at DESC')
+      else
+        @tasks = @project.tasks.joins(:responsibles).where('responsibles.user_id' => current_user.id, completed: false).order('created_at DESC')
+      end
   end
 
   # GET /projects/new
   def new
     @project = Project.new
     @task = @project.tasks.new
+    
     
   end
 
@@ -64,8 +71,26 @@ class ProjectsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def completed
+    if current_user.admin?
+      @projects = Project.includes(:tasks).where(tasks: { completed: true } ).all
+    @projects.each do |project| 
+      @project = project    
+    @tasks = project.tasks
+    end
+    else
+      redirect_to root_path, alert: "You have no permission for that event" unless current_user.admin?
+    end
+  
+    end
+
+
+
+
 
   private
+  
     # Use callbacks to share common setup or constraints between actions.
     def set_project
       @project = Project.find(params[:id])

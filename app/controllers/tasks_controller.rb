@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project, only: [:new, :create, :show, :edit, :update, :task_done, :destroy]
+  before_action :set_project, only: [:new, :create, :show, :edit, :update, :task_done, :destroy, :mytasks]
   before_action :set_task, only: [:show, :edit, :update, :task_done, :destroy]
   before_action :isadmin?, only: [:create, :new, :edit, :destroy, :completed]
   before_action :res_user, only:[:edit, :destroy,:update, :show]
@@ -90,9 +90,7 @@ class TasksController < ApplicationController
   end
 
 
-  def mytasks    
-    @mytasks = Task.joins(:responsibles).where('responsibles.user_id' => current_user.id)     
-  end
+  
 
   def task_done
     @progress = 100 / @task.responsibles.size.to_f
@@ -129,14 +127,7 @@ class TasksController < ApplicationController
 
   end
 
-  def completed
-    if current_user.admin?
-    @tasks = Task.order('created_at DESC').where(completed: true)
-    else
-      redirect_to root_path, alert: "You have no permission for that event" unless current_user.admin?
-    end
   
-    end
 
     def task_reminder
       @tasks = Task.where(task_done: false)
@@ -145,6 +136,11 @@ class TasksController < ApplicationController
       
     end
 
+
+    def mytasks  
+      @project = Project.find(params[:project_id])  
+      @mytasks = @project.tasks.joins(:responsibles).where('responsibles.user_id' => current_user.id)     
+    end
 
 
 
